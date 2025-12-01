@@ -1,2 +1,2 @@
 # japan
-japan learner | hiragana, katakana, kanji, basic vocab
+japanese learner | hiragana, katakana, kanji, basic vocab
