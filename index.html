@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nihongo Mastery | Interactive Practice & Dictionary</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="app.js" defer></script>
+</head>
+<body>
+    <div class="app-container">
+        <header class="toolbar">
+            <div class="score-display" role="status" aria-live="polite">
+                <span id="score-correct" aria-label="Correct answers">0</span> /
+                <span id="score-total" aria-label="Total questions">0</span>
+                (<span id="score-percent" aria-label="Accuracy percentage">100%</span>)
+            </div>
+            <div id="timer-display" class="timer-display" aria-label="Time remaining">60s</div>
+        </header>
+
+        <main class="main-content">
+            <div id="view-selector" class="view-selector" role="tablist" aria-label="Application Views">
+                <button id="tab-practice" data-view="practice" class="view-tab active" aria-selected="true" role="tab">Practice</button>
+                <button id="tab-dictionary" data-view="dictionary" class="view-tab" aria-selected="false" role="tab">Dictionary</button>
+            </div>
+
+            <section id="practice-view" class="content-view" role="tabpanel" aria-labelledby="tab-practice">
+                <div class="config-bar">
+                    <div id="mode-selector" class="mode-selector" role="radiogroup" aria-label="Select Practice Mode">
+                        <button id="mode-hiragana" data-mode="hiragana" class="mode-button" aria-pressed="true">Hiragana</button>
+                        <button id="mode-katakana" data-mode="katakana" class="mode-button" aria-pressed="false">Katakana</button>
+                        <button id="mode-kanji" data-mode="kanji" class="mode-button" aria-pressed="false">Kanji</button>
+                        <button id="mode-words" data-mode="words" class="mode-button" aria-pressed="false">Basic Words</button>
+                    </div>
+
+                    <div class="config-controls">
+                        <div class="config-item">
+                            <label for="time-limit" class="config-label">Time (s):</label>
+                            <select id="time-limit" aria-label="Select time limit">
+                                <option value="0">Practice (∞)</option>
+                                <option value="30">30</option>
+                                <option value="60" selected>60</option>
+                                <option value="120">120</option>
+                            </select>
+                        </div>
+            
+                        <div class="config-item">
+                            <label for="num-options" class="config-label">Choices:</label>
+                            <select id="num-options" aria-label="Number of answer choices">
+                                <option value="3" selected>3</option>
+                                <option value="4">4</option>
+                            </select>
+                        </div>
+
+                        <div class="config-item toggle-switch">
+                            <input type="checkbox" id="romaji-toggle" class="toggle-checkbox" aria-checked="false">
+                            <label for="romaji-toggle" class="toggle-label" aria-label="Toggle showing Romaji hint"></label>
+                            <span class="toggle-text">Show Hint</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="practice-card">
+                    <div id="target-glyph" class="target-glyph" aria-live="polite">Select mode & Click Start</div>
+                    <div id="feedback-message" class="feedback-message" aria-live="polite"></div>
+                    <div id="answer-options" class="answer-options">
+                        </div>
+                </div>
+
+                <div class="action-buttons">
+                    <button id="btn-start" aria-label="Start Practice Session">Start</button>
+                    <button id="btn-stop" disabled aria-label="Stop Practice Session">Stop</button>
+                    <button id="btn-next" disabled aria-label="Next Question (Keyboard shortcut: Space or Right Arrow)">Next</button>
+                    <button id="btn-reset" aria-label="Reset Score and Progress">Reset</button>
+                </div>
+            </section>
+
+            <section id="dictionary-view" class="content-view hidden" role="tabpanel" aria-labelledby="tab-dictionary">
+                <div class="dictionary-header">
+                    <input type="text" id="dict-search-input" placeholder="Search Japanese (あ, ア, 一) or English (a, one, hello)..." aria-label="Search Dictionary">
+                    <div id="dict-filter-buttons" class="dict-filters" role="group" aria-label="Dictionary Filters">
+                        <button data-filter="all" class="filter-button active">All</button>
+                        <button data-filter="hiragana" class="filter-button">ひらがな</button>
+                        <button data-filter="katakana" class="filter-button">カタカナ</button>
+                        <button data-filter="kanji" class="filter-button">漢字</button>
+                        <button data-filter="words" class="filter-button">単語</button>
+                    </div>
+                </div>
+                <div id="dict-results-container" class="dict-results-container" aria-live="polite">
+                    <p class="initial-message">Start typing to search or select a filter above to browse the full character and word list.</p>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <audio id="sound-click" src="sounds/click.mp3" preload="auto"></audio>
+    <audio id="sound-correct" src="sounds/correct.mp3" preload="auto"></audio>
+    <audio id="sound-wrong" src="sounds/wrong.mp3" preload="auto"></audio>
+</body>
+</html>

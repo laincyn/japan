@@ -1,0 +1,498 @@
+/* Custom Properties and Dark Mode */
+:root {
+    --color-background: #f4f7f6;
+    --color-card: #ffffff;
+    --color-text-primary: #1f2937;
+    --color-text-secondary: #6b7280;
+    --color-accent: #3b82f6;
+    --color-accent-dark: #2563eb;
+    --color-correct: #10b981;
+    --color-wrong: #ef4444;
+    --color-shadow: rgba(0, 0, 0, 0.1);
+    --font-family: 'Inter', system-ui, sans-serif;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --color-background: #1f2937;
+        --color-card: #374151;
+        --color-text-primary: #f9fafb;
+        --color-shadow: rgba(255, 255, 255, 0.1);
+    }
+}
+
+/* Base Styles */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: var(--font-family);
+    background-color: var(--color-background);
+    color: var(--color-text-primary);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 20px;
+}
+
+.app-container {
+    width: 100%;
+    max-width: 800px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 20px;
+}
+
+/* Header & Toolbar */
+.toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 2px solid var(--color-shadow);
+}
+
+.score-display, .timer-display {
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+/* View Selector (Tabs) */
+.view-selector {
+    display: flex;
+    border-bottom: 2px solid var(--color-shadow);
+    margin-bottom: 20px;
+}
+
+.view-tab {
+    padding: 12px 20px;
+    border: none;
+    background-color: transparent;
+    color: var(--color-text-secondary);
+    font-weight: 600;
+    font-size: 1.1rem;
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    transition: all 0.2s;
+}
+
+.view-tab.active, .view-tab:hover {
+    color: var(--color-accent);
+    border-bottom: 3px solid var(--color-accent);
+}
+
+/* Practice View - Configuration Bar */
+.config-bar {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--color-shadow);
+}
+
+.mode-selector {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.mode-button {
+    padding: 8px 12px;
+    border: 1px solid var(--color-accent);
+    background-color: transparent;
+    color: var(--color-accent);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s, transform 0.1s;
+    font-weight: 500;
+}
+
+.mode-button:hover, .mode-button[aria-pressed="true"] {
+    background-color: var(--color-accent);
+    color: var(--color-card);
+}
+
+.config-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px 25px;
+    align-items: center;
+}
+
+.config-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.config-label {
+    font-weight: 500;
+    color: var(--color-text-secondary);
+    font-size: 0.95rem;
+}
+
+.config-controls select {
+    padding: 6px 10px;
+    border-radius: 6px;
+    border: 1px solid var(--color-shadow);
+    background-color: var(--color-card);
+    color: var(--color-text-primary);
+    cursor: pointer;
+    outline: none;
+}
+
+/* Practice View - Card & Glyph */
+.practice-card {
+    background-color: var(--color-card);
+    padding: 40px 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px var(--color-shadow);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.target-glyph {
+    font-size: clamp(4rem, 15vw, 8rem);
+    font-weight: 700;
+    margin-bottom: 15px;
+    min-height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-accent-dark);
+}
+
+.feedback-message {
+    min-height: 1.5rem;
+    font-size: 1.2rem;
+    font-weight: 500;
+    margin-bottom: 30px;
+}
+
+/* Answer Options Grid */
+.answer-options {
+    display: grid;
+    /* Uses a CSS variable set in JS for flexible grid columns */
+    grid-template-columns: repeat(var(--num-options, 2), 1fr);
+    gap: 15px;
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.answer-button {
+    padding: 15px 20px;
+    border: 2px solid var(--color-accent);
+    background-color: var(--color-card);
+    color: var(--color-accent);
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 1.1rem;
+    font-weight: 600;
+    transition: all 0.2s, transform 0.1s;
+}
+
+.answer-button:hover:not(:disabled) {
+    background-color: var(--color-accent);
+    color: var(--color-card);
+    box-shadow: 0 4px 8px rgba(59, 130, 246, 0.3);
+}
+
+/* Click/Press Down Effect (Interactive Sound UI) */
+button:active:not(:disabled) {
+    transform: scale(0.98);
+}
+
+.answer-button.correct {
+    background-color: var(--color-correct);
+    border-color: var(--color-correct);
+    color: var(--color-card);
+    box-shadow: 0 0 10px var(--color-correct);
+}
+
+.answer-button.wrong {
+    background-color: var(--color-wrong);
+    border-color: var(--color-wrong);
+    color: var(--color-card);
+}
+
+.answer-button:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+/* Action Buttons */
+.action-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.action-buttons button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.1s;
+}
+
+#btn-start {
+    background-color: var(--color-correct);
+    color: var(--color-card);
+}
+
+#btn-stop, #btn-reset {
+    background-color: var(--color-text-secondary);
+    color: var(--color-card);
+}
+
+#btn-next {
+    background-color: var(--color-accent);
+    color: var(--color-card);
+}
+
+.action-buttons button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Toggle Switch */
+.toggle-switch {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.toggle-checkbox {
+    display: none;
+}
+
+.toggle-label {
+    width: 40px;
+    height: 20px;
+    background-color: var(--color-text-secondary);
+    border-radius: 10px;
+    position: relative;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    flex-shrink: 0;
+}
+
+.toggle-label::after {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 16px;
+    height: 16px;
+    background-color: var(--color-card);
+    border-radius: 50%;
+    transition: transform 0.3s;
+}
+
+.toggle-checkbox:checked + .toggle-label {
+    background-color: var(--color-correct);
+}
+
+.toggle-checkbox:checked + .toggle-label::after {
+    transform: translateX(20px);
+}
+
+.toggle-text {
+    font-size: 0.9rem;
+    color: var(--color-text-secondary);
+}
+
+/* --------------------------------- */
+/* Dictionary View Styles (New Feature) */
+/* --------------------------------- */
+
+.content-view.hidden {
+    display: none;
+}
+
+.dictionary-header {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--color-shadow);
+}
+
+#dict-search-input {
+    width: 100%;
+    padding: 12px 15px;
+    border-radius: 8px;
+    border: 2px solid var(--color-accent);
+    font-size: 1rem;
+    outline: none;
+    background-color: var(--color-card);
+    color: var(--color-text-primary);
+    transition: border-color 0.2s;
+}
+
+#dict-search-input::placeholder {
+    color: var(--color-text-secondary);
+    opacity: 0.7;
+}
+
+.dict-filters {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.filter-button {
+    padding: 8px 12px;
+    border: 1px solid var(--color-text-secondary);
+    background-color: transparent;
+    color: var(--color-text-secondary);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s, transform 0.1s;
+    font-size: 0.9rem;
+}
+
+.filter-button.active, .filter-button:hover {
+    background-color: var(--color-accent);
+    border-color: var(--color-accent);
+    color: var(--color-card);
+}
+
+.dict-results-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 15px;
+    padding: 10px 0;
+    max-height: 60vh; /* Set a max height for scrollability */
+    overflow-y: auto;
+}
+
+.initial-message {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 50px 0;
+    color: var(--color-text-secondary);
+    font-style: italic;
+}
+
+.dict-card {
+    background-color: var(--color-card);
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px var(--color-shadow);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    transition: transform 0.2s;
+    cursor: help;
+    position: relative;
+}
+
+.dict-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px var(--color-shadow);
+}
+
+.dict-glyph {
+    font-size: 2.5rem;
+    font-weight: 700;
+    line-height: 1;
+    color: var(--color-accent-dark);
+}
+
+/* Kanji specific reading container */
+.dict-readings-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0px;
+    line-height: 1.2;
+    min-height: 35px; /* ensure consistent height for layout */
+}
+
+/* Furigana/Readings */
+.dict-readings {
+    font-size: 0.8rem;
+    color: var(--color-text-primary);
+    font-weight: 500;
+}
+
+/* Romaji Readings (New addition) */
+.dict-romaji-readings {
+    font-size: 0.75rem;
+    font-style: italic;
+    color: var(--color-text-secondary);
+}
+
+/* Romaji for Kana/Words */
+.dict-romaji {
+    font-size: 0.8rem;
+    font-style: italic;
+    color: var(--color-text-primary);
+    min-height: 17px; /* keep consistent vertical space */
+}
+
+.dict-meaning {
+    font-size: 0.85rem;
+    color: var(--color-text-secondary);
+    margin-top: 5px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-height: 17px;
+}
+
+/* Tag Styles (for visual distinction) */
+.dict-type-tag {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 2px 5px;
+    border-radius: 4px;
+    color: var(--color-card);
+}
+.dict-card[data-type="hiragana"] .dict-type-tag { background-color: #6366f1; }
+.dict-card[data-type="katakana"] .dict-type-tag { background-color: #06b6d4; }
+.dict-card[data-type="kanji"] .dict-type-tag { background-color: #f97316; }
+.dict-card[data-type="words"] .dict-type-tag { background-color: #8b5cf6; }
+
+
+/* Media Queries for Responsiveness */
+@media (max-width: 600px) {
+    .app-container {
+        padding: 10px;
+    }
+    .toolbar {
+        flex-direction: column;
+        gap: 10px;
+    }
+    .config-bar {
+        align-items: center;
+    }
+    .mode-selector {
+        justify-content: center;
+    }
+    .config-controls {
+        justify-content: center;
+    }
+    .answer-options {
+        grid-template-columns: 1fr;
+    }
+    .dict-results-container {
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    }
+}
